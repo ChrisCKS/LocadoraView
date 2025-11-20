@@ -3,13 +3,38 @@ using Locadora.Controller;
 using Microsoft.Data.SqlClient;
 using Utils.Database;
 
-Cliente cliente = new Cliente("Novo Cliete com Transaction", " tr@tr.com", "999999");
+Cliente cliente = new Cliente("Novo Cliete documento", "x@email.com", "123456");
+Documento documento = new Documento("CPF", "987654321", new DateOnly(2023, 01, 01), new DateOnly(2035, 01, 01));
 
 //Console.WriteLine(cliente);
 
 var clienteController = new ClienteController();
 
+
 try
+{
+    clienteController.AtualizarDocumentoCliente(documento, "x@email.com");
+
+    Console.WriteLine(clienteController.BuscaClientePorEmail("novoemail@2.com"));
+
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
+/*try
+{
+    clienteController.AdicionarCliente(cliente, documento);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}*/
+
+
+
+/*try
 {
     var listaClientes = clienteController.ListarTodosCliente();
 
@@ -21,19 +46,22 @@ try
 catch (Exception ex)
 {
     Console.WriteLine(ex.Message);
-}
+}*/
 
-clienteController.AdicionarCliente(cliente);
+/*clienteController.AdicionarCliente(cliente);
 
 var listadeClientes = clienteController.ListarTodosCliente();
 
 foreach (var clientedaLista in listadeClientes)
 {
     Console.WriteLine(clientedaLista);
-}
+}*/
 
-clienteController.AtualizarTelefoneCliente("9998888", "x@x.com");
-Console.WriteLine(clienteController.BuscaClientePorEmail("x@x.com"));
+
+//clienteController.DeletarCliente(" tr@tr.com");
+
+//clienteController.AtualizarTelefoneCliente("9998888", "x@x.com");
+//Console.WriteLine(clienteController.BuscaClientePorEmail("x@x.com"));
 
 
 //fazendo uma tratativa de erro para o try em AdicionarCliente

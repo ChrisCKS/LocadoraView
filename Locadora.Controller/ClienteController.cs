@@ -7,7 +7,7 @@ namespace Locadora.Controller
 {
     public class ClienteController
     {
-        public void AdicionarCliente(Cliente cliente)
+        public void AdicionarCliente(Cliente cliente, Documento documento)
         {
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
@@ -23,9 +23,24 @@ namespace Locadora.Controller
                     command.Parameters.AddWithValue("@Email", cliente.Email); //if     //else
                     command.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? (object)DBNull.Value);
 
-                    cliente.setClienteID(Convert.ToInt32(command.ExecuteScalar()));
+                    int clienteId = Convert.ToInt32(command.ExecuteScalar());
+                    cliente.setClienteID(clienteId);
+
+                    //cliente.setClienteID(Convert.ToInt32(command.ExecuteScalar()));
+
+
+                    var documentoController = new DocumentoController();
+
+                    documento.setClienteID(clienteId);
+
+                    documentoController.AdicionarDocumento(documento, connection, transaction);
 
                     transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao adicionar cliente: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
@@ -44,10 +59,10 @@ namespace Locadora.Controller
         { 
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
-            connection.Open();
-
             try
             {
+                connection.Open();
+
                 SqlCommand command = new SqlCommand(Cliente.SELECTALLCLIENTES, connection);
 
                 SqlDataReader reader = command.ExecuteReader();
@@ -61,7 +76,18 @@ namespace Locadora.Controller
                         reader["Email"].ToString()!,
                         reader["Telefone"] != DBNull.Value ? reader["Telefone"].ToString() : null
                     );
-                    cliente.setClienteID(Convert.ToInt32(reader["ClienteId"]));
+
+                    //cliente.setClienteID(Convert.ToInt32(reader["ClienteId"]));
+
+                    //listaClientes.Add(cliente);
+
+                    var documento = new Documento(reader["TipoDocumento"].ToString(),
+                                                  reader["Numero"].ToString(),
+                                                  DateOnly.FromDateTime(reader.GetDateTime(5)),
+                                                  DateOnly.FromDateTime(reader.GetDateTime(6))
+                                                  );
+
+                    cliente.setDocumento(documento);
 
                     listaClientes.Add(cliente);
                 }
@@ -103,6 +129,13 @@ namespace Locadora.Controller
                         reader["Telefone"] != DBNull.Value ? reader["Telefone"].ToString() : null
                     );
                     cliente.setClienteID(Convert.ToInt32(reader["ClienteId"]));
+
+                    var documento = new Documento(
+                        reader["TipoDocumento"].ToString()!,
+                        reader["Numero"].ToString()!,
+                        DateOnly.FromDateTime(reader.GetDateTime(6)),
+                        DateOnly.FromDateTime(reader.GetDateTime(7))
+                    );
                     return cliente;
                 }
                 return null;
@@ -148,7 +181,7 @@ namespace Locadora.Controller
             }
         }
 
-        public void DeletarCliente(string email)
+        public void AtualizarDocumentoCliente(Documento documento, string email)
         {
             var clienteEncontrado = BuscaClientePorEmail(email);
 
@@ -163,11 +196,46 @@ namespace Locadora.Controller
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(Cliente.DELETECLIENTEPORID, connection, transaction);
-                    command.Parameters.AddWithValue("@IdCliente", clienteEncontrado.ClienteId);
-                    command.ExecuteNonQuery();
+                    documento.setClienteID(clienteEncontrado.ClienteId);
+                    DocumentoController documentoController = new DocumentoController();
+
+                    documentoController.AtualizarDocumento(documento, connection, transaction);
 
                     transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar documento do cliente: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro inesperado ao atualizar documento do cliente: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+        }
+        public void DeletarCliente(string email)
+        {
+            var clienteEncontrado = BuscaClientePorEmail(email);
+
+            if (clienteEncontrado is null)
+                throw new Exception("Nao existe cliente com este email");
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
+
+                try
+                {
+                    SqlCommand command = new SqlCommand(Cliente.DELETECLIENTEPORID, connection);
+                    command.Parameters.AddWithValue("@IdCliente", clienteEncontrado.ClienteId);
+                    command.ExecuteNonQuery();
                 }
                 catch (SqlException ex)
                 {
@@ -181,7 +249,6 @@ namespace Locadora.Controller
                 {
                     connection.Close();
                 }
-            }
         }
     }
 }

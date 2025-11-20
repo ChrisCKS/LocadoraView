@@ -6,12 +6,20 @@
                                                       "VALUES (@Nome, @Email, @Telefone); " +
                                                       "SELECT SCOPE_IDENTITY();";
 
-        public readonly static string SELECTALLCLIENTES = "SELECT * FROM tblClientes";
+        public readonly static string SELECTALLCLIENTES = "SELECT c.Nome, c.Email, c.Telefone,\r\n\t\td.TipoDocumento, d.Numero, d.DataEmissao, d.DataValidade\r\n  " +
+                                                             "FROM tblClientes c\r\n  " +
+                                                               "JOIN tblDocumentos d \r\n  " +
+                                                               "ON c.ClienteID = d.ClienteID";
 
         public readonly static string UPDATETELEFONECLIENTE = "UPDATE tblClientes SET Telefone = @Telefone " +
                                                               "WHERE ClienteID = @IdCliente";
 
-        public readonly static string SELECTCLIENTEPOREMAIL = "SELECT * FROM tblClientes WHERE Email = @Email";
+        public readonly static string SELECTCLIENTEPOREMAIL = @"SELECT c.ClienteID, c.Nome, c.Email, c.Telefone,
+		                                                    d.TipoDocumento, d.Numero, d.DataEmissao, d.DataValidade
+                                                            FROM tblClientes c
+                                                            JOIN tblDocumentos d
+                                                            ON c.ClienteID = d.ClienteID
+                                                            WHERE c.Email = @Email";                                         
 
         public readonly static string DELETECLIENTEPORID = "DELETE FROM tblClientes WHERE ClienteID = @IdCliente";
 
@@ -21,6 +29,9 @@
         public string Email { get; private set; }
 
         public string Telefone { get; private set; } = String.Empty;
+
+        public Documento Documento { get; private set; }
+
 
         public Cliente(string nome, string email)       //posso criar cliente sem telefone
         {
@@ -33,6 +44,7 @@
             Telefone = telefone;
         }
 
+
         public void setClienteID (int clienteId)
         {
             ClienteId = clienteId;
@@ -43,9 +55,14 @@
             Telefone = telefone;
         }
 
+        public void setDocumento(Documento documento)
+        {
+            Documento = documento;
+        }
+
         public override string? ToString()
         {
-            return $"Nome: {Nome}, \nEmail: {Email}, \nTelefone: {Telefone}";
+            return $"Nome: {Nome}, \nEmail: {Email}, \nTelefone: {Telefone},  Documento:  {Documento}";
         }
     }
 }
