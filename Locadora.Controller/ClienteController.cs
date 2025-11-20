@@ -7,7 +7,6 @@ namespace Locadora.Controller
 {
     public class ClienteController
     {
-       
         public void AdicionarCliente(Cliente cliente)
         {
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
@@ -146,6 +145,42 @@ namespace Locadora.Controller
             finally 
             {
                 connection.Close();
+            }
+        }
+
+        public void DeletarCliente(string email)
+        {
+            var clienteEncontrado = BuscaClientePorEmail(email);
+
+            if (clienteEncontrado is null)
+                throw new Exception("Nao existe cliente com este email");
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
+
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(Cliente.DELETECLIENTEPORID, connection, transaction);
+                    command.Parameters.AddWithValue("@IdCliente", clienteEncontrado.ClienteId);
+                    command.ExecuteNonQuery();
+
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("Erro ao deletar cliente: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro inesperado ao deletar cliente" + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
     }

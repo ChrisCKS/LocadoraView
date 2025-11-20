@@ -48,19 +48,6 @@ catch (Exception ex)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*Cliente cliente = new Cliente("Christian" , "c@c.com");
 //Documento documento = new Documento(1, "RG", "123456789", new DateOnly(2020, 01, 01), new DateOnly(2030, 01, 01));
 
