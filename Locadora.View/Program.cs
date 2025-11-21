@@ -3,12 +3,75 @@ using Locadora.Controller;
 using Microsoft.Data.SqlClient;
 using Utils.Database;
 
-Cliente cliente = new Cliente("Novo Cliete documento", "x@email.com", "123456");
-Documento documento = new Documento("CPF", "987654321", new DateOnly(2023, 01, 01), new DateOnly(2035, 01, 01));
+Categoria categoria = new Categoria("Grupo H", 89.00m );
+
+var categoriaController = new CategoriaController();
+
+#region AdicionarCategoria
+/*try 
+{
+    categoriaController.AdicionarCategoria(categoria);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}*/
+#endregion
+
+#region SELECTALLCATEGORIAS
+/*try 
+{
+    var listaCategorias = categoriaController.ListarTodasCategorias();
+
+    foreach (var categoriaDaLista in listaCategorias)
+    {
+        Console.WriteLine(categoriaDaLista);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}*/
+#endregion
+
+#region UPDATECATEGORIA
+/*try 
+{
+    categoriaController.AtualizarCategoria("Grupoc C", 95.00m, "Carro Economico Atualizado");
+    Console.WriteLine(categoriaController.BuscarCategoriaPorNome("Grupoc C"));
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}*/
+#endregion
+
+#region DELETECATEGORIA
+try 
+{
+    categoriaController.DeletarCategoria("Grupo H");
+    Console.WriteLine("Categoria deletada com sucesso.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
+#endregion
+
+
+
+
+
+
+/*CLIENTE*/
+
+
+/*Cliente cliente = new Cliente("Novo Cliete documento", "x@email.com", "123456");
+Documento documento = new Documento("CPF", "987654321", new DateOnly(2023, 01, 01), new DateOnly(2035, 01, 01));*/
 
 //Console.WriteLine(cliente);
 
-var clienteController = new ClienteController();
+/*var clienteController = new ClienteController();
 
 
 try
@@ -21,7 +84,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine(ex.Message);
-}
+}*/
 
 /*try
 {
@@ -73,31 +136,3 @@ catch (Exception ex)
 {
     Console.WriteLine(ex.Message);
 }*/
-
-
-
-/*Cliente cliente = new Cliente("Christian" , "c@c.com");
-//Documento documento = new Documento(1, "RG", "123456789", new DateOnly(2020, 01, 01), new DateOnly(2030, 01, 01));
-
-Console.WriteLine(cliente);
-//Console.WriteLine(documento);
-
-var connection = new SqlConnection(ConnectionDB.GetConnectionString());
-
-connection.Open();
-
-SqlCommand command = new SqlCommand(Cliente.INSERTCLIENTE, connection);
-
-command.Parameters.AddWithValue("@Nome", cliente.Nome);
-command.Parameters.AddWithValue("@Email", cliente.Email); //if     //else
-command.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? (object)DBNull.Value);
-
-cliente.setClienteID(Convert.ToInt32(command.ExecuteScalar())); 
-
-Console.ReadLine();
-
-connection.Close();*/
-
-/*outra opção*/
-//int clienteId = (Convert.ToInt32(command.ExecuteScalar());
-//cliente.SetClienteID(clienteId)

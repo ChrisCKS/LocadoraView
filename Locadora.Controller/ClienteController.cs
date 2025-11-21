@@ -51,10 +51,8 @@ namespace Locadora.Controller
                 {
                     connection.Close();
                 }
-            }
-            
+            } 
         }
-
         public List<Cliente> ListarTodosCliente() 
         { 
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
@@ -136,6 +134,8 @@ namespace Locadora.Controller
                         DateOnly.FromDateTime(reader.GetDateTime(6)),
                         DateOnly.FromDateTime(reader.GetDateTime(7))
                     );
+                    cliente.setDocumento(documento);
+
                     return cliente;
                 }
                 return null;
@@ -143,6 +143,14 @@ namespace Locadora.Controller
             catch (SqlException ex)
             {
                 throw new Exception ("Erro ao buscar cliente por email" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro inesperado ao buscar cliente por email: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
             }
         }
         

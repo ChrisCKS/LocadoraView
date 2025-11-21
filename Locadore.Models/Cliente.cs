@@ -2,14 +2,14 @@
 {
     public class Cliente
     {
-        public readonly static string INSERTCLIENTE = "INSERT INTO tblClientes (Nome, Email, Telefone) " +
-                                                      "VALUES (@Nome, @Email, @Telefone); " +
-                                                      "SELECT SCOPE_IDENTITY();";
+        public readonly static string INSERTCLIENTE = "INSERT INTO tblClientes VALUES(@Nome, @Email, @Telefone); " +
+                                                        "SELECT SCOPE_IDENTITY()";
 
-        public readonly static string SELECTALLCLIENTES = "SELECT c.Nome, c.Email, c.Telefone,\r\n\t\td.TipoDocumento, d.Numero, d.DataEmissao, d.DataValidade\r\n  " +
-                                                             "FROM tblClientes c\r\n  " +
-                                                               "JOIN tblDocumentos d \r\n  " +
-                                                               "ON c.ClienteID = d.ClienteID";
+        public readonly static string SELECTALLCLIENTES = @"SELECT c.Nome, c.Email, c.Telefone,
+		                                                    d.TipoDocumento, d.Numero, d.DataEmissao, d.DataValidade
+                                                            FROM tblClientes c
+                                                            JOIN tblDocumentos d
+                                                            ON c.ClienteID = d.ClienteID";
 
         public readonly static string UPDATETELEFONECLIENTE = "UPDATE tblClientes SET Telefone = @Telefone " +
                                                               "WHERE ClienteID = @IdCliente";
@@ -19,18 +19,18 @@
                                                             FROM tblClientes c
                                                             JOIN tblDocumentos d
                                                             ON c.ClienteID = d.ClienteID
-                                                            WHERE c.Email = @Email";                                         
+                                                            WHERE c.Email = @Email";
 
         public readonly static string DELETECLIENTEPORID = "DELETE FROM tblClientes WHERE ClienteID = @IdCliente";
 
-        public int ClienteId { get; private set; }
-        public string Nome { get; private set; }
+        public int ClienteId { get; private set;}
+        public string Nome { get; private set;}
 
-        public string Email { get; private set; }
+        public string Email { get; private set;}
 
-        public string Telefone { get; private set; } = String.Empty;
+        public string? Telefone { get; private set;} = String.Empty;
 
-        public Documento Documento { get; private set; }
+        public Documento Documento { get; private set;}
 
 
         public Cliente(string nome, string email)       //posso criar cliente sem telefone

@@ -37,43 +37,6 @@ namespace Locadora.Controller
                 }
         }
 
-        public Documento BuscaDocumentoPorClienteID(int clienteId)
-        {
-            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
-            connection.Open();
-            try
-            {
-                string selectDocumentoPorClienteID = "SELECT TipoDocumento, Numero, DataEmissao, DataValidade " +
-                                                     "FROM tblDocumentos " +
-                                                     "WHERE ClienteID = @ClienteID";
-                SqlCommand command = new SqlCommand(selectDocumentoPorClienteID, connection);
-                command.Parameters.AddWithValue("@ClienteID", clienteId);
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.Read())
-                {
-                    string tipoDocumento = reader.GetString(0);
-                    string numero = reader.GetString(1);
-                    DateOnly dataEmissao = DateOnly.FromDateTime(reader.GetDateTime(2));
-                    DateOnly dataValidade = DateOnly.FromDateTime(reader.GetDateTime(3));
-                    Documento documento = new Documento(tipoDocumento, numero, dataEmissao, dataValidade);
-                    documento.setClienteID(clienteId);
-                    return documento;
-                }
-                else
-                {
-                    throw new Exception("Documento não encontrado para o ClienteID fornecido.");
-                }
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception("Erro ao buscar documento: " + ex.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }   /**/
-
         public void AtualizarDocumento(Documento documento, SqlConnection connection, SqlTransaction transaction)
         {
             try
@@ -92,9 +55,9 @@ namespace Locadora.Controller
             {
                 throw new Exception("Erro ao atualizar documento: " + ex.Message);
             }
-            finally
+            catch (Exception ex)
             {
-                connection.Close();
+                throw new Exception("Erro inesperado ao alterar documento: " + ex.Message);
             }
         }
     }
