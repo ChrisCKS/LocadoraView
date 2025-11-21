@@ -21,6 +21,14 @@ catch (Exception ex)
     Console.WriteLine("Erro" + ex.Message);
 }
 
+//Console.WriteLine(veiculoController.BuscarVeiculoPlaca("XYZ-1234"));
+
+//var veiculo = veiculoController.BuscarVeiculoPlaca("XYZ-1234");
+
+//veiculoController.DeletarVeiculo(veiculo.VeiculoId);
+
+veiculoController.AtualizarStatusVeiculo(EStatusVeiculo.Manutencao.ToString(), "XYZ-1234");
+Console.WriteLine(veiculoController.BuscarVeiculoPlaca("XYZ-1234"));
 
 
 

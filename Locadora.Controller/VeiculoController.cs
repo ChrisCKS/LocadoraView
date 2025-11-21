@@ -2,6 +2,7 @@
 using Locadora.Models;
 using Locadora.Models.Enums;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -11,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Utils.Database;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Locadora.Controller
@@ -19,7 +21,7 @@ namespace Locadora.Controller
     {
         public void AdicionarVeiculo(Veiculo veiculo)
         {
-            SqlConnection connection = new SqlConnection(Utils.Database.ConnectionDB.GetConnectionString());
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
             connection.Open();
 
             using (SqlTransaction transaction = connection.BeginTransaction())
@@ -61,7 +63,7 @@ namespace Locadora.Controller
             var veiculos = new List<Veiculo>();
             var categoriaController = new CategoriaController();
 
-            SqlConnection connection = new SqlConnection(Utils.Database.ConnectionDB.GetConnectionString());
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
             connection.Open();
 
@@ -109,17 +111,123 @@ namespace Locadora.Controller
 
         public Veiculo BuscarVeiculoPlaca(string placa) 
         {
-            throw new NotImplementedException();
+            var categoriaController = new CategoriaController();
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            Veiculo veiculo = null;
+
+            connection.Open();
+
+            using (SqlCommand command = new SqlCommand(Veiculo.SELECTVEICULOPORPLACA, connection))
+            {
+                try
+                {
+                    command.Parameters.AddWithValue("@Placa", placa);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            veiculo = new Veiculo(
+                            
+                            reader.GetInt32(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.GetString(4),
+                            reader.GetInt32(5),
+                            reader.GetString(6)
+                            );
+                            veiculo.setVeiculoID(reader.GetInt32(0));
+                            veiculo.setNomeCategoria(       //buscarnomecategoriaporid
+                                categoriaController.BuscarCategoriaPorNome(veiculo.CategoriaID)      /*========*/
+                             );
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("Erro ao buscar veiculo por placa: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro inesperado ao buscar veiculo por placa: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                return veiculo ?? throw new Exception("Veiculo não encontrado");
+            }
         }
 
-        public void AtualizarStatusVeiculo(string statusVeiculo)
+        public void AtualizarStatusVeiculo(string statusVeiculo, string placa)
         {
-            throw new NotImplementedException();
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            var veiculo = BuscarVeiculoPlaca(placa ?? throw new Exception("Veiculo nao encontrado"));
+
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(Veiculo.UPDATESTATUSVEICULO, connection, transaction);
+
+                    command.Parameters.AddWithValue("@StatusVeiculo", statusVeiculo);
+                    command.Parameters.AddWithValue("@IdVeiculo", veiculo.VeiculoId);
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar status veiculo: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro inesperado ao atualizar status veiculo: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
 
         public void DeletarVeiculo(int IdVeiculo)
         {
-            throw new NotImplementedException();
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                
+                try
+                {
+                    SqlCommand command = new SqlCommand(Veiculo.DELETEVEICULO, connection, transaction);
+                    command.Parameters.AddWithValue("@IdVeiculo", IdVeiculo);
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao deletar veiculo: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro inesperado ao deletar veiculo: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+
         }
 
 

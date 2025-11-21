@@ -135,6 +135,39 @@ namespace Locadora.Controller
             }
         }
 
+        public string BuscarNomeCategoriaPorId(int id)
+        {
+            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            try
+            {
+                SqlCommand command = new SqlCommand(Categoria.SELECTNOMECATEGORIAPORID, connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                string nomecategoria = String.Empty;
+
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    nomecategoria = reader["Nome"].ToString() ?? string.Empty;
+                }
+                return nomecategoria;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Erro ao buscar categoria." + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro inesperado ao buscar categoria." + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         public void AtualizarCategoria(string nome, decimal diaria, string descricao)
         {
             var categoriaEncontrada = BuscarCategoriaPorNome(nome);
