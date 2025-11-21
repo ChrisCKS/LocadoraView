@@ -2,10 +2,54 @@
 using Locadora.Controller;
 using Microsoft.Data.SqlClient;
 using Utils.Database;
+using Locadora.Models.Enums;
 
-Categoria categoria = new Categoria("Grupo H", 89.00m );
+var veiculoController = new VeiculoController();
+try 
+{
+    //var veiculo = new Veiculo(1, "XYZ-1234", "Toyota", "Corolla", 2020, EStatusVeiculo.Disponivel.ToString());
+    //veiculoController.AdicionarVeiculo(veiculo);
+    var veiculos = veiculoController.ListarTodosVeiculos();
 
-var categoriaController = new CategoriaController();
+    foreach (var item in veiculos)
+    {
+        Console.WriteLine(item);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Erro" + ex.Message);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*CATEGORIA*/
+
+//Categoria categoria = new Categoria("Grupo H", 89.00m );
+
+//var categoriaController = new CategoriaController();
 
 #region AdicionarCategoria
 /*try 
@@ -47,7 +91,7 @@ catch (Exception ex)
 #endregion
 
 #region DELETECATEGORIA
-try 
+/*try 
 {
     categoriaController.DeletarCategoria("Grupo H");
     Console.WriteLine("Categoria deletada com sucesso.");
@@ -55,7 +99,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine(ex.Message);
-}
+}*/
 #endregion
 
 

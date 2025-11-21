@@ -8,12 +8,33 @@ namespace Locadora.Models
 {
     public class Veiculo
     {
+
+        public readonly static string INSERTVEICULO = @"INSERT INTO tblVeiculos (CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo)
+                                                        VALUES (@CategoriaID, @Placa, @Marca, @Modelo, @Ano, @StatusVeiculo)";
+
+        public readonly static string SELECTALLVEICULOS = @"SELECT CategoriaID, 
+                                                            Placa, Marca, Modelo, Ano, StatusVeiculo
+                                                            FROM tblVeiculos";
+
+        public readonly static string SELECTVEICULOPORPLACA = @"SELECT CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo
+                                                                FROM tblVeiculo
+                                                                WHERE Placa = @Placa";
+
+        public readonly static string UPDATESTATUSVEICULO = @"UPDATE tblVeiculos 
+                                                            SET StatusVeiculo = @StatusVeiculo
+                                                            WHERE VeiculoID = @IdVeiculo";
+
+        public readonly static string DELETEVEICULO = @"DELETE FROM tblVeiculos 
+                                                        WHERE VeiculoID = @IdVeiculo";
+
         public int VeiculoId { get; private set; }
         public int CategoriaId { get; private set; }
         public string Placa { get; private set; }
         public string Marca { get; private set; }
         public string Modelo { get; private set; }
         public int Ano { get; private set; }
+
+        public string  NomeCategoria { get; set; }
 
         public string StatusVeiculo { get; private set; }
 
@@ -37,10 +58,15 @@ namespace Locadora.Models
             StatusVeiculo = statusVeiculo;
         }
 
+        public void setNomeCategoria(string nomeCategoria)          /*=========*/
+        {
+            NomeCategoria = nomeCategoria;
+        }
+
         public override string? ToString()
         {
             return $"Placa: {Placa}," + $" \nMarca: {Marca}, \nModelo: {Modelo}, \n" +
-                   $"Ano: {Ano}, \nStatus do Veículo: {StatusVeiculo}";
+                   $"Ano: {Ano}, \nStatus do Veículo: {StatusVeiculo} \nNome Categoria: {NomeCategoria}"; /*=======*/
         }
     }
 }
