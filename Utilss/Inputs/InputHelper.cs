@@ -103,9 +103,10 @@ namespace Utils.Inputs
                 if (string.IsNullOrWhiteSpace(digitado) && valorPadrao != null)
                     return valorPadrao.Value;
 
-                if (DateOnly.TryParse(digitado, out DateOnly data))
+                if (DateOnly.TryParseExact( digitado,"dd/MM/yyyy",System.Globalization.CultureInfo.InvariantCulture,System.Globalization.DateTimeStyles.None,out DateOnly data))
+                {
                     return data;
-
+                }
                 Console.WriteLine(mensagemErro);
             }
         }
@@ -120,8 +121,10 @@ namespace Utils.Inputs
                 if (string.IsNullOrWhiteSpace(digitado) && permitirNulo)
                     return null;
 
-                if (DateOnly.TryParse(digitado, out DateOnly data))
+                if (DateOnly.TryParseExact(digitado,"dd/MM/yyyy",System.Globalization.CultureInfo.InvariantCulture,System.Globalization.DateTimeStyles.None, out DateOnly data))
+                {
                     return data;
+                }
 
                 Console.WriteLine(mensagemErro);
             }

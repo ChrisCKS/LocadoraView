@@ -164,6 +164,7 @@ public class FuncionarioController : IFuncionarioController
                 SqlCommand command = new SqlCommand(Funcionario.UPDATEFUNCIONARIOSALARIO, connection, transaction);
                 command.Parameters.AddWithValue("@Salario", funcionarioEncontrado.Salario);
                 command.Parameters.AddWithValue("@IdFuncionario", funcionarioEncontrado.FuncionarioID);
+
                 command.ExecuteNonQuery();
                 transaction.Commit();
             }
@@ -174,6 +175,7 @@ public class FuncionarioController : IFuncionarioController
             }
             catch (Exception ex)
             {
+                transaction.Rollback();
                 throw new Exception("Erro inesperado ao atualizar salário do funcionário" + ex.Message);
             }
             finally

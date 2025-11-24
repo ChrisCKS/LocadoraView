@@ -45,6 +45,7 @@ namespace Locadora.Controller
                 command.Parameters.AddWithValue("@DataEmissao", documento.DataEmissao);
                 command.Parameters.AddWithValue("@DataValidade", documento.DataValidade);
 
+                command.Parameters.AddWithValue("@IdCliente", documento.ClienteId);
                 command.ExecuteNonQuery();
             }
             catch (SqlException ex)

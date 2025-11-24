@@ -28,7 +28,7 @@ namespace Locadora.Controller
                     int veiculoId = Convert.ToInt32(command.ExecuteScalar());
                     veiculo.setVeiculoID(veiculoId);
 
-                    command.ExecuteNonQuery();
+                    //command.ExecuteNonQuery();
 
                     transaction.Commit();
                 }
@@ -298,6 +298,11 @@ namespace Locadora.Controller
                 {
                     var veiculoEncontrado = BuscarVeiculoPlaca(placa) ??
                         throw new Exception("Veículo não encontrado para deletar.");
+
+                    if (veiculoEncontrado.StatusVeiculo == "Alugado")                   /*adicionando validação*/
+                    {
+                        throw new Exception("Não é possível remover este veículo: ele está atualmente alugado.");
+                    }
 
                     SqlCommand command = new SqlCommand(Veiculo.DELETEVEICULO, connection, transaction);
                     command.Parameters.AddWithValue("@Placa", veiculoEncontrado.Placa);

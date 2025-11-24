@@ -17,6 +17,8 @@ namespace Locadora.Controller.Interface
 
         public void AtualizarDocumentoCliente(Documento documento, string email);
 
+        public bool ClientePossuiLocacaoAtiva(int clienteId);   /*adição de novo metodo*/
+
         public void DeletarCliente(string email);
     }
 }

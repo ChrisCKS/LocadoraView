@@ -269,12 +269,41 @@ namespace Locadora.Controller
             }
 
         }
+
+        public bool ClientePossuiLocacaoAtiva(int clienteId)                /*Adicionando novo metodo*/
+        {
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            try
+            {
+                SqlCommand command = new SqlCommand(Cliente.SELECTLOCACOESATIVASDOCLIENTE, connection);
+                command.Parameters.AddWithValue("@ClienteID", clienteId);
+
+                int locacoesAtivas = Convert.ToInt32(command.ExecuteScalar());
+                return locacoesAtivas > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao verificar locações ativas do cliente: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         public void DeletarCliente(string email)
         {
             var clienteEncontrado = BuscaClientePorEmail(email);
 
             if (clienteEncontrado is null)
                 throw new Exception("Nao existe cliente com este email");
+
+            if (ClientePossuiLocacaoAtiva(clienteEncontrado.ClienteId))         /*Adicionando verificação*/
+            {
+                throw new Exception("Não é possível remover este cliente: ele possui locações ativas.");
+            }
 
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 

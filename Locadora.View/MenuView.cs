@@ -22,7 +22,7 @@ public class MenuView
             Console.Write("Selecione uma opção: ");
             int.TryParse(Console.ReadLine(), out op);
 
-            if (op >= 0 && op <= 4)
+            if (op >= 0 && op <= 6)
             {
                 convertido = true;
             }

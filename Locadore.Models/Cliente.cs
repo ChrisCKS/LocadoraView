@@ -25,6 +25,9 @@
                                                             FROM tblClientes 
                                                             WHERE ClienteID = @ClienteID";
 
+        public static readonly string SELECTLOCACOESATIVASDOCLIENTE = @"SELECT COUNT(*) FROM tblLocacoes WHERE ClienteID = @ClienteID AND Status = 'Ativa'";
+
+
         public readonly static string DELETECLIENTEPORID = "DELETE FROM tblClientes WHERE ClienteID = @IdCliente";
 
         public int ClienteId { get; private set;}

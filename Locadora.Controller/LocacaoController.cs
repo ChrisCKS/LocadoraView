@@ -84,8 +84,8 @@ public class LocacaoController : ILocacaoController
         var veiculoController = new VeiculoController();
         var clienteController = new ClienteController();
         var funcionarioController = new FuncionarioController();
+        var locacaoFuncionarioController = new LocacaoFuncionarioController();
         var locacoes = new List<Locacao>();
-
 
         try
         {
@@ -102,6 +102,9 @@ public class LocacaoController : ILocacaoController
                     diasLocacao
                 );
 
+                var listaFuncionario = locacaoFuncionarioController.BuscarFuncionariosPorLocacao(reader.GetInt32(6));
+                string funcionario1 = listaFuncionario[0];
+                string funcionario2 = listaFuncionario.Count > 1 ? listaFuncionario[1] :  null;
 
                 var nomeCliente = clienteController.BuscarNomeClientePorID(reader.GetInt32(4));
                 var (marca, modelo, placa) = veiculoController.BuscarMarcaModeloPorVeiculoID(reader.GetInt32(5));

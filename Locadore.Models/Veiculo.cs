@@ -9,15 +9,16 @@ namespace Locadora.Models
     public class Veiculo
     {
 
-        public readonly static string INSERTVEICULO = @"INSERT INTO tblVeiculos (CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo)
+        public readonly static string INSERTVEICULO = @"INSERT INTO tblVeiculos (CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo) 
+                                                        OUTPUT INSERTED.VeiculoID
                                                         VALUES (@CategoriaID, @Placa, @Marca, @Modelo, @Ano, @StatusVeiculo)";
 
         public readonly static string SELECTALLVEICULOS = @"SELECT CategoriaID, 
                                                             Placa, Marca, Modelo, Ano, StatusVeiculo
                                                             FROM tblVeiculos";
 
-        public readonly static string SELECTVEICULOPORPLACA = @"SELECT CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo
-                                                                FROM tblVeiculo
+        public readonly static string SELECTVEICULOPORPLACA = @"SELECT VeiculoID CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo
+                                                                FROM tblVeiculos
                                                                 WHERE Placa = @Placa";
 
         public static readonly string SELECTDIARIAPORVEICULO = @"SELECT c.Diaria

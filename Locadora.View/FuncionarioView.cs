@@ -8,14 +8,12 @@ namespace Locadora.View
 {
     public class FuncionarioView
     {
-        FuncionarioController funcionarioController = new FuncionarioController();
-
         public static void ExibirMenuFuncionarios()
         {
-            FuncionarioController funcionarioController = new FuncionarioController();
-
             int op;
             bool convertido;
+
+            FuncionarioController funcionarioController = new FuncionarioController();
 
             do
             {

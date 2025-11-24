@@ -160,7 +160,7 @@ namespace Locadora.View
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Erro ao atualizar telefone do cliente. " + ex.Message);
+                            throw new Exception("Erro ao atualizar telefone do cliente. " + ex.Message);    /*====*/
                         }
                         break;
 
@@ -206,6 +206,7 @@ namespace Locadora.View
                         break;
 
                     case 6:
+
                         Console.Clear();
                         Console.WriteLine("===== Remover Cliente =====");
 
