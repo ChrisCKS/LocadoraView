@@ -32,7 +32,7 @@ namespace Locadora.Controller
 
                     var documentoController = new DocumentoController();
 
-                    documento.setClienteID(clienteId);
+                    documento.SetClienteId(clienteId);
 
                     documentoController.AdicionarDocumento(documento, connection, transaction);
 
@@ -190,36 +190,43 @@ namespace Locadora.Controller
 
         public void AtualizarTelefoneCliente(string telefone, string email)
         {
-            var clienteEncontrado =BuscaClientePorEmail(email);
-
-            if (clienteEncontrado is null)
-                throw new Exception("Nao existe cliente com este email");
-
-            clienteEncontrado.setTelefone(telefone);
-
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
             connection.Open();
 
-            try
+            using (SqlTransaction transaction = connection.BeginTransaction()) 
             {
-                SqlCommand command = new SqlCommand(Cliente.UPDATETELEFONECLIENTE, connection);
+                var clienteEncontrado = BuscaClientePorEmail(email);
 
-                command.Parameters.AddWithValue("@Telefone", clienteEncontrado.Telefone);
-                command.Parameters.AddWithValue("@IdCliente", clienteEncontrado.ClienteId);
-                command.ExecuteNonQuery();
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception("Erro ao atualizar telefone do cliente" + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro inesperado ao atualizar telefone do cliente" + ex.Message);
-            }
-            finally 
-            {
-                connection.Close();
+                if (clienteEncontrado is null)
+                    throw new Exception("Nao existe cliente com este email");
+
+                clienteEncontrado.setTelefone(telefone);
+
+                try
+                {
+                    SqlCommand command = new SqlCommand(Cliente.UPDATETELEFONECLIENTE, connection, transaction);
+
+                    command.Parameters.AddWithValue("@Telefone", clienteEncontrado.Telefone);
+                    command.Parameters.AddWithValue("@IdCliente", clienteEncontrado.ClienteId);
+
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar telefone do cliente" + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro inesperado ao atualizar telefone do cliente" + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 

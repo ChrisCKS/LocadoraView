@@ -6,7 +6,7 @@ using Utils.Database;
 
 namespace Locadora.Controller
 {
-    public class CategoriaController : ICategoria
+    public class CategoriaController : ICategoriaController
     {
         public void AdicionarCategoria(Categoria categoria)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Locadora.Controller.Interface
 {
-    public interface ICategoria
+    public interface ICategoriaController
     {
         public void AdicionarCategoria(Categoria categoria);
 
@@ -17,7 +17,7 @@ namespace Locadora.Controller.Interface
 
         public string BuscarNomeCategoriaPorId(int id);
 
-        public void AtualizarCategoria(string nome, decimal diaria, string descricao);
+        public void AtualizarCategoria(string nome, Categoria categoria);
 
         public void DeletarCategoria(string nome);
 

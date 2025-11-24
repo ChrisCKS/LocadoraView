@@ -153,7 +153,6 @@ namespace Locadora.View
                     break;
 
                 case 0:
-                    Menus.ExibirMenuPrincipal();
                     break;
 
                 default:
