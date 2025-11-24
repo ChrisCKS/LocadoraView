@@ -17,7 +17,7 @@ namespace Locadora.Models
                                                             Placa, Marca, Modelo, Ano, StatusVeiculo
                                                             FROM tblVeiculos";
 
-        public readonly static string SELECTVEICULOPORPLACA = @"SELECT VeiculoID CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo
+        public readonly static string SELECTVEICULOPORPLACA = @"SELECT VeiculoID, CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo
                                                                 FROM tblVeiculos
                                                                 WHERE Placa = @Placa";
 

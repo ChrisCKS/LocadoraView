@@ -24,7 +24,7 @@ public class LocacaoController : ILocacaoController
                 throw new Exception("Diária do veículo não encontrada.");
 
             var statusVeiculo = veiculoController.BuscarStatusPorVeiculoID(locacao.VeiculoID);
-            if (statusVeiculo != "Disponível")
+            if (statusVeiculo != "Disponivel")
                 throw new Exception("Veículo não está disponível para locação.");
 
 
@@ -102,6 +102,11 @@ public class LocacaoController : ILocacaoController
                     diasLocacao
                 );
 
+                if (locacoes.Any(l => l.LocacaoID == locacao.LocacaoID))
+                {
+                    continue;
+                }
+
                 var listaFuncionario = locacaoFuncionarioController.BuscarFuncionariosPorLocacao(reader.GetInt32(6));
                 string funcionario1 = listaFuncionario[0];
                 string funcionario2 = listaFuncionario.Count > 1 ? listaFuncionario[1] :  null;
@@ -114,11 +119,11 @@ public class LocacaoController : ILocacaoController
                 locacao.SetMarca(marca);
                 locacao.SetModelo(modelo);
                 locacao.SetDataDevolucaoPrevista(reader.GetDateTime(7));
-                locacao.SetDataDevolucaoReal(reader.IsDBNull(8) ? (DateTime?)null : reader.GetDateTime(8));
-                locacao.SetValorDiaria(reader.GetDecimal(9));
-                locacao.SetValorTotal(reader.GetDecimal(10));
-                locacao.SetMulta(reader.GetDecimal(11));
-                locacao.SetStatus((EStatusLocacao)Enum.Parse(typeof(EStatusLocacao), reader.GetString(12)));
+                locacao.SetDataDevolucaoReal(reader.IsDBNull(9) ? (DateTime?)null : reader.GetDateTime(9));
+                locacao.SetValorDiaria(reader.GetDecimal(10));
+                locacao.SetValorTotal(reader.GetDecimal(11));
+                locacao.SetMulta(reader.GetDecimal(12));
+                locacao.SetStatus((EStatusLocacao)Enum.Parse(typeof(EStatusLocacao), reader.GetString(13)));
 
 
                 locacoes.Add(locacao);

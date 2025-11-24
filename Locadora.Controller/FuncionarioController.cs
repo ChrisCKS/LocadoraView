@@ -119,7 +119,7 @@ public class FuncionarioController : IFuncionarioController
         connection.Open();
         try
         {
-            SqlCommand command = new SqlCommand(Funcionario.SELECTFUNCIONARIOPORCPF, connection);
+            SqlCommand command = new SqlCommand(Funcionario.SELECTFUNCIONARIOPORID, connection);
 
             command.Parameters.AddWithValue("@IdFuncionario", id);
 

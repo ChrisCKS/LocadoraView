@@ -305,7 +305,7 @@ namespace Locadora.Controller
                     }
 
                     SqlCommand command = new SqlCommand(Veiculo.DELETEVEICULO, connection, transaction);
-                    command.Parameters.AddWithValue("@Placa", veiculoEncontrado.Placa);
+                    command.Parameters.AddWithValue("@IdVeiculo", veiculoEncontrado.VeiculoId);
 
                     command.ExecuteNonQuery();
                     transaction.Commit();
