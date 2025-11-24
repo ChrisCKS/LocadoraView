@@ -153,7 +153,40 @@ namespace Locadora.Controller
                 connection.Close();
             }
         }
-        
+
+        public string BuscarNomeClientePorID(int clienteID) 
+        {
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+            try
+            {
+                SqlCommand command = new SqlCommand(Cliente.SELECTCLIENTEPORID, connection);
+                command.Parameters.AddWithValue("@ClienteID", clienteID);
+
+                SqlDataReader reader = command.ExecuteReader();
+                string nomeCliente = String.Empty;
+
+                if (reader.Read())
+                {
+                    nomeCliente = reader["Nome"].ToString() ?? String.Empty;
+                }
+                return nomeCliente;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Erro ao buscar nome do cliente: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro inesperado ao buscar nome do cliente: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+        }
+
         public void AtualizarTelefoneCliente(string telefone, string email)
         {
             var clienteEncontrado =BuscaClientePorEmail(email);

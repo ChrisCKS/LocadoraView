@@ -6,7 +6,6 @@ public interface ILocacaoController
 {
     public void AdicionarLocacao(Locacao locacao, string cpf);
     public List<Locacao> ListarLocacoes();
-    public Locacao BuscarLocacaoPorID(int locacaoID);
-    public void AtualizarStatusLocacao(string placa);
-    public void EncerrarLocacao(Locacao locacao, string placa);
+    public void CancelarLocacao(int locacaoID);
+    public void EncerrarLocacao(int locacaoID);
 }

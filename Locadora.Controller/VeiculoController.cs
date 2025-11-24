@@ -219,7 +219,7 @@ namespace Locadora.Controller
             return null;
         }
 
-        public string BuscarMarcaModeloPorVeiculoID(int veiculoID)
+        public (string, string, string) BuscarMarcaModeloPorVeiculoID(int veiculoID)
         {
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
             connection.Open();
@@ -232,7 +232,8 @@ namespace Locadora.Controller
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    return reader["Marca"].ToString() + reader["Modelo"].ToString() + reader["Placa"].ToString();
+                    return (reader.GetString(0), reader.GetString(1), reader.GetString(3));
+
                 }
             }
             catch (SqlException ex)
