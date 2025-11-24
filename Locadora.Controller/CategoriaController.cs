@@ -21,7 +21,8 @@ namespace Locadora.Controller
                     SqlCommand command = new SqlCommand(Categoria.INSERTCATEGORIA, connection, transaction);
 
                     command.Parameters.AddWithValue("@Nome", categoria.Nome);
-                    command.Parameters.AddWithValue("@Descricao", categoria.Descricao ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Descricao",
+                    categoria.Descricao == null ? DBNull.Value : categoria.Descricao);
                     var p = command.Parameters.Add("@Diaria", SqlDbType.Decimal);
                     p.Precision = 10;
                     p.Scale = 2;

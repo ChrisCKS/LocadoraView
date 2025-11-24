@@ -21,7 +21,8 @@ public class FuncionarioController : IFuncionarioController
                 command.Parameters.AddWithValue("@Nome", funcionario.Nome);
                 command.Parameters.AddWithValue("@CPF", funcionario.CPF);
                 command.Parameters.AddWithValue("@Email", funcionario.Email);
-                command.Parameters.AddWithValue("@Salario", funcionario.Salario);
+                command.Parameters.AddWithValue("@Salario",
+                funcionario.Salario == null ? DBNull.Value : funcionario.Salario);
                 int funcionarioID = Convert.ToInt32(command.ExecuteScalar());
                 funcionario.setFuncionarioID(funcionarioID);
                 transaction.Commit();
