@@ -16,9 +16,8 @@ namespace Locadora.Models
 
         public readonly static string SELECTALLCATEGORIAS = "SELECT CategoriaId, Nome, Descricao, Diaria FROM tblCategorias;";
 
-        //aq o prof mudou para categoria por id
-        //e ai mudou la na busca tb
-        public readonly static string SELECTCATEGORIANOME = "SELECT CategoriaId, Nome, Descricao, Diaria FROM tblCategorias WHERE Nome = @Nome";
+      
+        public readonly static string SELECTNOMECATEGORIAPORID = "SELECT Nome FROM tblCategorias WHERE CategoriaID = @Id";
 
         public readonly static string UPDATECATEGORIA = "UPDATE tblCategorias " +
                                                         "SET Descricao = @Descricao, Diaria = @Diaria " +

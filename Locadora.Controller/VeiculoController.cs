@@ -1,19 +1,8 @@
 ﻿using Locadora.Controller.Interface;
 using Locadora.Models;
-using Locadora.Models.Enums;
 using Microsoft.Data.SqlClient;
-using Microsoft.Data.SqlTypes;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Utils.Database;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Locadora.Controller
 {
@@ -39,16 +28,18 @@ namespace Locadora.Controller
                     int veiculoId = Convert.ToInt32(command.ExecuteScalar());
                     veiculo.setVeiculoID(veiculoId);
 
-                    //command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
 
                     transaction.Commit();
                 }
                 catch (SqlException ex)
                 {
+                    transaction.Rollback();
                     throw new Exception("Erro ao adicionar veiculo: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
+                    transaction.Rollback();
                     throw new Exception("Erro inesperado ao adicionar veiculo: " + ex.Message);
                 }
                 finally
@@ -86,7 +77,7 @@ namespace Locadora.Controller
                             );
 
                             veiculo.setNomeCategoria(
-                                categoriaController.BuscarCategoriaPorNome(veiculo.CategoriaId).Nome        /*========*/
+                                categoriaController.BuscarNomeCategoriaPorId(veiculo.CategoriaId)       
                                 );
                             veiculos.Add(veiculo);  
 
@@ -139,8 +130,9 @@ namespace Locadora.Controller
                             reader.GetString(6)
                             );
                             veiculo.setVeiculoID(reader.GetInt32(0));
-                            veiculo.setNomeCategoria(       //buscarnomecategoriaporid
-                                categoriaController.BuscarCategoriaPorNome(veiculo.CategoriaID)      /*========*/
+
+                            veiculo.setNomeCategoria(      
+                                categoriaController.BuscarNomeCategoriaPorId(veiculo.CategoriaId)      
                              );
                         }
                     }
@@ -160,6 +152,104 @@ namespace Locadora.Controller
                 return veiculo ?? throw new Exception("Veiculo não encontrado");
             }
         }
+
+        public decimal BuscarDiariaPorVeiculoID(int veiculoID)
+        {
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            decimal diaria = 0;
+
+            try
+            {
+                var command = new SqlCommand(Veiculo.SELECTDIARIAPORVEICULO, connection);
+
+                command.Parameters.AddWithValue("@VeiculoID", veiculoID);
+
+                var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    return Convert.ToDecimal(reader["Diaria"]);
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Erro ao buscar diaria do veiculo: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro inesperado ao buscar diaria do veiculo: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return diaria;
+        }
+
+        public string BuscarStatusPorVeiculoID(int veiculoID)
+        {
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            try
+            {
+                var command = new SqlCommand(Veiculo.SELECTVEICULOPORID, connection);
+                command.Parameters.AddWithValue("@VeiculoID", veiculoID);
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return reader["StatusVeiculo"].ToString() ?? string.Empty;
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Erro ao buscar status do veiculo : " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro inesperado ao buscar status do veiculo: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
+
+        public string BuscarMarcaModeloPorVeiculoID(int veiculoID)
+        {
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+            try
+            {
+                var command = new SqlCommand(Veiculo.SELECTVEICULOPORID, connection);
+                command.Parameters.AddWithValue("@VeiculoID", veiculoID);
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return reader["Marca"].ToString() + reader["Modelo"].ToString() + reader["Placa"].ToString();
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Erro ao buscar marca e modelo do veiculo : " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro inesperado ao buscar marca e modelo do veiculo: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
+
 
         public void AtualizarStatusVeiculo(string statusVeiculo, string placa)
         {

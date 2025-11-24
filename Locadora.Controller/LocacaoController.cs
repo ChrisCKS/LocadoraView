@@ -3,7 +3,6 @@ using Locadora.Models;
 using Locadora.Models.Enums;
 using Microsoft.Data.SqlClient;
 using Utils.Database;
-using Utils.Databases;
 
 namespace Locadora.Controller;
 
@@ -35,12 +34,14 @@ public class LocacaoController : ILocacaoController
             try
             {
                 var command = new SqlCommand(Locacao.INSERTLOCACAO, connection, transaction);
+
                 command.Parameters.AddWithValue("@ClienteID", locacao.ClienteID);
                 command.Parameters.AddWithValue("@VeiculoID", locacao.VeiculoID);
                 command.Parameters.AddWithValue("@DataLocacao", locacao.DataLocacao);
                 command.Parameters.AddWithValue("@DataDevolucaoPrevista", locacao.DataDevolucaoPrevista);
                 command.Parameters.AddWithValue("@DataDevolucaoReal",
                     (object?)locacao.DataDevolucaoReal ?? DBNull.Value);
+
                 command.Parameters.AddWithValue("@ValorDiaria", diaria);
                 command.Parameters.AddWithValue("@ValorTotal", total);
                 command.Parameters.AddWithValue("@Multa", (object?)locacao.Multa ?? DBNull.Value);

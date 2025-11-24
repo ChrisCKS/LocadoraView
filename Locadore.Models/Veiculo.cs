@@ -20,6 +20,16 @@ namespace Locadora.Models
                                                                 FROM tblVeiculo
                                                                 WHERE Placa = @Placa";
 
+        public static readonly string SELECTDIARIAPORVEICULO = @"SELECT c.Diaria
+                                                                FROM tblVeiculos v
+                                                                JOIN tblCategorias c
+                                                                ON v.CategoriaID = c.CategoriaID
+                                                                WHERE VeiculoID = @VeiculoID";
+
+        public static readonly string SELECTVEICULOPORID = @"SELECT Marca, Modelo, StatusVeiculo, Placa 
+                                                            FROM tblVeiculos 
+                                                             WHERE VeiculoID = @VeiculoID";
+
         public readonly static string UPDATESTATUSVEICULO = @"UPDATE tblVeiculos 
                                                             SET StatusVeiculo = @StatusVeiculo
                                                             WHERE VeiculoID = @IdVeiculo";
@@ -58,7 +68,7 @@ namespace Locadora.Models
             StatusVeiculo = statusVeiculo;
         }
 
-        public void setNomeCategoria(string nomeCategoria)          /*=========*/
+        public void setNomeCategoria(string nomeCategoria)         
         {
             NomeCategoria = nomeCategoria;
         }
@@ -66,7 +76,7 @@ namespace Locadora.Models
         public override string? ToString()
         {
             return $"Placa: {Placa}," + $" \nMarca: {Marca}, \nModelo: {Modelo}, \n" +
-                   $"Ano: {Ano}, \nStatus do Veículo: {StatusVeiculo} \nNome Categoria: {NomeCategoria}"; /*=======*/
+                   $"Ano: {Ano}, \nStatus do Veículo: {StatusVeiculo} \nNome Categoria: {NomeCategoria}";
         }
     }
 }
