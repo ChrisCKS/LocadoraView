@@ -1,15 +1,11 @@
-﻿using Locadora.Models;
+﻿using Locadora.Controller.Interface;
+using Locadora.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utils.Database;
+
 
 namespace Locadora.Controller
 {
-    public class DocumentoController
+    public class DocumentoController : IDocumento
     {
         public void AdicionarDocumento(Documento documento, SqlConnection connection, SqlTransaction transaction)
         {
@@ -27,12 +23,12 @@ namespace Locadora.Controller
                 }
                 catch (SqlException ex)
                 {
-                    //transaction.Rollback();
+                    transaction.Rollback();
                     throw new Exception("Erro ao adicionar documento: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    //transaction.Rollback();
+                    transaction.Rollback();
                     throw new Exception("Erro inesperado ao adicionar documento: " + ex.Message);
                 }
         }

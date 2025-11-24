@@ -2,10 +2,11 @@
 using Utils.Database;
 using Locadora.Models;
 using System.Transactions;
+using Locadora.Controller.Interface;
 
 namespace Locadora.Controller
 {
-    public class ClienteController
+    public class ClienteController : IClienteController
     {
         public void AdicionarCliente(Cliente cliente, Documento documento)
         {

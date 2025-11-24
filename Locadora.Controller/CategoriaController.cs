@@ -1,11 +1,12 @@
-﻿using Locadora.Models;
+﻿using Locadora.Controller.Interface;
+using Locadora.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Utils.Database;
 
 namespace Locadora.Controller
 {
-    public class CategoriaController
+    public class CategoriaController : ICategoria
     {
         public void AdicionarCategoria(Categoria categoria)
         {

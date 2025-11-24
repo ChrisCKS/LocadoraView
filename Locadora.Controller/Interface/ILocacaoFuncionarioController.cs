@@ -4,6 +4,9 @@ namespace Locadora.Controller.Interface
 {
     public interface ILocacaoFuncionarioController
     {
-        public void AdicionarRelação(int locacaoID, int funcionarioID);
+        public interface ILocacaoFuncionarioController
+        {
+            public void Adicionar(int locacaoID, int funcionarioID);
+        }
     }
 }
