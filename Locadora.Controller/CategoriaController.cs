@@ -98,7 +98,7 @@ namespace Locadora.Controller
 
             try
             {
-                SqlCommand command = new SqlCommand(Categoria.SELECTCATEGORIANOME, connection);
+                SqlCommand command = new SqlCommand(Categoria.SELECTCATEGORIAPORNOME, connection);
 
                 command.Parameters.AddWithValue("@Nome", nome);
 
@@ -164,21 +164,18 @@ namespace Locadora.Controller
             }
         }
 
-        public void AtualizarCategoria(string nome, decimal diaria, string descricao)
+        public void AtualizarCategoria(string nome, Categoria categoria)
         {
             var categoriaEncontrada = BuscarCategoriaPorNome(nome);
-
-            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
-
-            connection.Open();
 
             if (categoriaEncontrada is null)
             {
                 throw new Exception("Categoria não encontrada.");
             }
 
-            categoriaEncontrada.Diaria = diaria;
-            categoriaEncontrada.Descricao = descricao;
+            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
 
             using (SqlTransaction transaction = connection.BeginTransaction())
             {
@@ -186,12 +183,9 @@ namespace Locadora.Controller
                 {
                     SqlCommand command = new SqlCommand(Categoria.UPDATECATEGORIA, connection, transaction);
 
-                    command.Parameters.AddWithValue("@IdCategoria", categoriaEncontrada.CategoriaId);
-                    command.Parameters.AddWithValue("@Descricao", categoriaEncontrada.Descricao ?? (object)DBNull.Value);
-                    var p = command.Parameters.Add("@Diaria", SqlDbType.Decimal);
-                    p.Precision = 10;
-                    p.Scale = 2;
-                    p.Value = categoriaEncontrada.Diaria;
+                    command.Parameters.AddWithValue("@Nome", categoriaEncontrada.Nome);
+                    command.Parameters.AddWithValue("@Descricao", categoria.Descricao is null ? DBNull.Value : categoria.Descricao);
+                    command.Parameters.AddWithValue("@Diaria", categoria.Diaria);
 
                     command.ExecuteNonQuery();
 

@@ -22,7 +22,7 @@ namespace Locadora.Controller.Interface
         public void AtualizarStatusVeiculo(string statusVeiculo, string placa);
 
 
-        public void DeletarVeiculo(int IdVeiculo);
+        public void DeletarVeiculo(string placa);
 
     }
 }

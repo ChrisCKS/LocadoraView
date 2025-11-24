@@ -54,7 +54,7 @@ namespace Locadora.Controller
                 }
             } 
         }
-        public List<Cliente> ListarTodosCliente() 
+        public List<Cliente> ListarTodosClientes() 
         { 
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
@@ -238,7 +238,7 @@ namespace Locadora.Controller
             {
                 try
                 {
-                    documento.setClienteID(clienteEncontrado.ClienteId);
+                    documento.SetClienteId(clienteEncontrado.ClienteId);
                     DocumentoController documentoController = new DocumentoController();
 
                     documentoController.AtualizarDocumento(documento, connection, transaction);

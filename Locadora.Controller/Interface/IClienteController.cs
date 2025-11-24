@@ -7,7 +7,7 @@ namespace Locadora.Controller.Interface
     {
         public void AdicionarCliente(Cliente cliente, Documento documento);
 
-        public List<Cliente> ListarTodosCliente();
+        public List<Cliente> ListarTodosClientes();
 
         public Cliente BuscaClientePorEmail(string email);
 

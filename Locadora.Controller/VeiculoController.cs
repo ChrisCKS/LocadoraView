@@ -248,7 +248,7 @@ namespace Locadora.Controller
             {
                 connection.Close();
             }
-            return null;
+            return (null, null, null);
         }
 
 
@@ -287,18 +287,21 @@ namespace Locadora.Controller
             }
         }
 
-        public void DeletarVeiculo(int IdVeiculo)
+        public void DeletarVeiculo(string placa)
         {
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
             connection.Open();
 
             using (SqlTransaction transaction = connection.BeginTransaction())
-            {
-                
+            {               
                 try
                 {
+                    var veiculoEncontrado = BuscarVeiculoPlaca(placa) ??
+                        throw new Exception("Veículo não encontrado para deletar.");
+
                     SqlCommand command = new SqlCommand(Veiculo.DELETEVEICULO, connection, transaction);
-                    command.Parameters.AddWithValue("@IdVeiculo", IdVeiculo);
+                    command.Parameters.AddWithValue("@Placa", veiculoEncontrado.Placa);
+
                     command.ExecuteNonQuery();
                     transaction.Commit();
                 }
@@ -317,10 +320,6 @@ namespace Locadora.Controller
                     connection.Close();
                 }
             }
-
-
         }
-
-
     }
 }

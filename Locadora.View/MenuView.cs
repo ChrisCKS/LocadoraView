@@ -36,7 +36,7 @@ public class MenuView
         switch (op)
         {
             case 1:
-                ExibirMenuLocacao();
+                LocacaoView.ExibirMenuLocacao();
                 break;
 
             case 2:
@@ -52,7 +52,7 @@ public class MenuView
                 break;
 
             case 5:
-                ExibirMenuFuncionarios();
+                FuncionarioView.ExibirMenuFuncionarios();
                 break;
 
             case 0:

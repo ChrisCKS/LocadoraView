@@ -37,7 +37,7 @@ namespace Locadora.Models
             DataValidade = dataValidade;
         }
 
-        public void setClienteID(int clienteId)
+        public void SetClienteId(int clienteId)
         {
             ClienteId = clienteId;
         }
